@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutad}">
+<head>
+    <title>List</title>
+    <link rel="icon" type="image/jpg" th:href="@{/img/favicon.jpg}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/fonts/boxicons.css}">
+    <!-- Include Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <!-- Include Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<section layout:fragment="content" class="container mt-3">
+    <section class="section-container popular-container">
+        <div id="app" class="card">
+            <div class="card-header border-bottom">
+                <h5 class="card-title">Thêm loại sự kiện mới</h5>
+                <form @submit.prevent="addEvent">
+                    <div class="mb-3">
+                        <label class="form-label">Tên sự kiện</label>
+                        <input type="text" class="form-control" v-model="newEvent.name" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Lưu</button>
+                    <button type="reset" class="btn btn-label-secondary" @click="clearForm">Hủy</button>
+                </form>
+            </div>
+            <div class="card-datatable table-responsive">
+
+                <!-- Event Table -->
+                <table class="datatables-users table border-top mt-3">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Loại sự kiện</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="event in events" :key="event.id">
+                        <td>{{ event.id }}</td>
+                        <td>{{ event.name }}</td>
+                        <td>
+                            <button @click="editEvent(event)" class="btn btn-warning btn-sm">Edit</button>
+                            <button @click="deleteEvent(event.id)" class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Edit Event Form -->
+            <div class="card-header border-bottom" v-if="isEditing">
+                <h5 class="card-title">Chỉnh sửa loại sự kiện</h5>
+                <form @submit.prevent="updateEvent">
+                    <div class="mb-3">
+                        <label class="form-label">Tên sự kiện</label>
+                        <input type="text" class="form-control" v-model="currentEvent.name" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Cập nhật</button>
+                    <button type="button" class="btn btn-label-secondary" @click="cancelEdit">Hủy</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                events: [],
+                newEvent: {
+                    name: ''
+                },
+                currentEvent: {
+                    id: null,
+                    name: ''
+                },
+                isEditing: false
+            },
+            methods: {
+                fetchEvents() {
+                    axios.get('/loaisk')
+                        .then(response => {
+                            this.events = response.data;
+                        })
+                        .catch(error => {
+                            console.error("There was an error fetching the events!", error);
+                        });
+                },
+                addEvent() {
+                    axios.post('/loaisk', this.newEvent)
+                        .then(response => {
+                            this.events.unshift(response.data);  // Add the new event at the top
+                            this.newEvent.name = '';
+                        })
+                        .catch(error => {
+                            console.error("There was an error adding the event!", error);
+                        });
+                },
+                editEvent(event) {
+                    this.isEditing = true;
+                    this.currentEvent = { ...event };
+                },
+                updateEvent() {
+                    axios.put(`/loaisk/${this.currentEvent.id}`, this.currentEvent)
+                        .then(response => {
+                            const index = this.events.findIndex(event => event.id === this.currentEvent.id);
+                            this.$set(this.events, index, response.data);
+                            this.cancelEdit();
+                        })
+                        .catch(error => {
+                            console.error("There was an error updating the event!", error);
+                        });
+                },
+                deleteEvent(id) {
+                    if (confirm('Are you sure you want to delete this event?')) {
+                        axios.delete(`/loaisk/${id}`)
+                            .then(response => {
+                                this.events = this.events.filter(event => event.id !== id);
+                            })
+                            .catch(error => {
+                                console.error("There was an error deleting the event!", error);
+                            });
+                    }
+                },
+                cancelEdit() {
+                    this.isEditing = false;
+                    this.currentEvent = { id: null, name: '' };
+                },
+                clearForm() {
+                    this.newEvent.name = '';
+                }
+            },
+            created() {
+                this.fetchEvents();
+            }
+        });
+    </script>
+</section>
+</body>
+</html>

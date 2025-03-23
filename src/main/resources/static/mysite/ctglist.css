@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
+
+:root {
+    --primary-color: #2c3855;
+    --primary-color-dark: #435681;
+    --text-dark: #333333;
+    --text-light: #767268;
+    --extra-light: #f3f4f6;
+    --white: #fff;
+    --max-width: 1200px;
+}
+
+.list-group {
+    max-width: var(--max-width);
+    margin: auto;
+    background: var(--white);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 50px;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.btn {
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.list-group-item {
+    background-color: var(--white);
+    border: 1px solid var(--text-light);
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.list-group-item:hover {
+    background-color: var(--extra-light);
+}
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    color: var(--white);
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+    color: var(--white);
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}

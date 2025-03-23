@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Add</title>
+    <link rel="icon" type="image/jpg" th:href="@{/img/favicon.jpg}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/fonts/boxicons.css}" />
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-3">
+    <section id="app" class="section-container popular-container">
+        <div>
+            <div class="container-xxl flex-grow-1 container-p-y">
+                <h4 class="py-3 mb-4"><span class="text-muted fw-light"></span> Sự kiện mới của bạn</h4>
+
+                <!-- Vertical form layout -->
+                <form @submit.prevent="addEvent">
+
+                    <div class="row">
+                        <div class="col-xl">
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Thông tin sự kiện</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="basic-icon-default-sukien">Tên sự kiện</label>
+                                        <div class="input-group input-group-merge"><span class="input-group-text"><i class="bx bx-calendar-event"></i></span>
+                                            <input type="text" class="form-control" id="basic-icon-default-sukien"
+                                                   placeholder="Tên sự kiện" v-model="newEvent.nameEvent" required/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="basic-icon-default-mota">Mô tả</label>
+                                        <div class="input-group input-group-merge"><span class="input-group-text"><i class="bx bx-buildings"></i></span>
+                                            <input type="text" id="basic-icon-default-mota" class="form-control"
+                                                   placeholder="Mô tả" v-model="newEvent.moTa" required/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="formFile" class="form-label">Hình ảnh sự kiện</label>
+                                        <input class="form-control" type="file" id="formFile" @change="onFileChange" v-model="newEvent.image" required/>
+                                        <img v-if="imageUrl" :src="imageUrl" alt="Event Image" style="width: 200px; margin-top: 10px;">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xxl">
+                                            <div class="mb-3">
+                                                <label for="exampleFormControlSelect1" class="form-label">Loại sự kiện</label>
+                                                <select class="form-select" id="exampleFormControlSelect1" v-model="newEvent.categoryId">
+                                                    <option selected disabled>Hình thức tổ chức</option>
+                                                    <option v-for="category in categoryList" :key="category.id" :value="category.id">{{ category.name }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl">
+                                            <div class="mb-3">
+                                                <label for="html5-number-input" class="form-label">Số người tham dự</label>
+                                                <input class="form-control" type="number" min="1" v-model="newEvent.soLuong" id="html5-number-input" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Horizontal form layout -->
+                    <div class="row">
+                        <div class="col-xxl">
+                            <div class="card mb-4">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <h5 class="mb-0">Thời gian & địa điểm</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="divider text-start-center">
+                                        <div class="divider-text">Sự kiện bắt đầu</div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="html5-date-input" class="col-md-2 col-form-label">Ngày</label>
+                                        <div class="col-md-10">
+                                            <input class="form-control" type="date" v-model="newEvent.dateBatDau"
+                                                   id="html5-date-input" required/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="html5-time-input" class="col-md-2 col-form-label">Thời gian</label>
+                                        <div class="col-md-10">
+                                            <input class="form-control" type="time" v-model="newEvent.timeBatDau"
+                                                   id="html5-time-input" required/>
+                                        </div>
+                                    </div>
+                                    <div class="divider text-start-center">
+                                        <div class="divider-text">Sự kiện kết thúc</div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="html5-datekt-input" class="col-md-2 col-form-label">Ngày</label>
+                                        <div class="col-md-10">
+                                            <input class="form-control" type="date" v-model="newEvent.dateKetThuc"
+                                                   id="html5-datekt-input" required/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="html5-timekt-input" class="col-md-2 col-form-label">Thời gian</label>
+                                        <div class="col-md-10">
+                                            <input class="form-control" type="time" v-model="newEvent.timeKetThuc"
+                                                   id="html5-timekt-input" required/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-2 col-form-label" for="basic-default-diachi">Địa điểm</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" v-model="newEvent.diaDiem"
+                                                   id="basic-default-diachi" placeholder="Địa chỉ." required/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl">
+                            <div class="card mb-4">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <h5 class="mb-0">Thông tin sự kiện</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="divider text-start-center">
+                                        <div class="divider-text">.</div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">Họ và tên</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group input-group-merge"><span class="input-group-text"><i class="bx bx-user"></i></span>
+                                                <input type="text" class="form-control"
+                                                       id="basic-icon-default-fullname" placeholder="Nhập tên của bạn" v-model="newEvent.name" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label"
+                                               for="basic-icon-default-company">Company</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group input-group-merge"><span class="input-group-text"><i class="bx bx-buildings"></i></span>
+                                                <input type="text" id="basic-icon-default-company"
+                                                       class="form-control" placeholder="ACME Inc." v-model="newEvent.company" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label"
+                                               for="basic-icon-default-email">Email</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group input-group-merge"><span class="input-group-text"><i class="bx bx-envelope"></i></span>
+                                                <input type="text" id="basic-icon-default-email"
+                                                       class="form-control" placeholder="john.doe" v-model="newEvent.email" required/>
+                                                <span id="basic-icon-default-email2" class="input-group-text">@example.com</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="basic-icon-default-phone">Phone
+                                            No</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group input-group-merge"><span class="input-group-text"><i class="bx bx-phone"></i></span>
+                                                <input type="text" id="basic-icon-default-phone"
+                                                       class="form-control phone-mask" placeholder="658 799 8941" v-model="newEvent.phone" required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label">Phí tham gia</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group input-group-merge"><span class="input-group-text"><i class="bx bx-money"></i></span>
+                                                <input type="number" class="form-control"
+                                                       id="basic-icon-default-money" placeholder="Nhập số tiền (VND)" v-model="newEvent.price" min="0" step="any" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /Horizontal form layout -->
+                    <div class="row justify-content-end">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Tạo sự kiện</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </section>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                events: [],
+                newEvent: {
+                    nameEvent: '',
+                    moTa: '',
+                    image: '',
+                    soLuong: 1,
+                    dateBatDau: '',
+                    timeBatDau: '',
+                    dateKetThuc: '',
+                    timeKetThuc: '',
+                    diaDiem: '',
+                    name: '',
+                    company: '',
+                    email: '',
+                    phone: '',
+                    price: '',
+                    categoryId: null
+                },
+                imageFile: null,
+                imageUrl: null,
+                categoryList: []
+            },
+            methods: {
+                onFileChange(e) {
+                    const file = e.target.files[0];
+                    this.imageFile = file;
+                    this.imageUrl = URL.createObjectURL(file);
+                },
+                addEvent() {
+                    const formData = new FormData();
+                    formData.append('image', this.imageFile);
+
+                    const selectedCategory = this.categoryList.find(category => category.id === this.newEvent.categoryId);
+
+                    const eventToAdd = {
+                        ...this.newEvent,
+                        category: selectedCategory
+                    };
+
+                    // Add event data to FormData as a JSON string
+                    formData.append('event', new Blob([JSON.stringify(eventToAdd)], { type: 'application/json' }));
+
+                    fetch('/api/events', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw err; });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        this.events.push(data);
+                        this.fetchEvents();
+                        this.resetForm();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                },
+                fetchEvents() {
+                    axios.get('/api/events')
+                        .then(response => {
+                            this.events = response.data;
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                },
+                fetchEventTypes() {
+                    fetch('/api/categories')
+                    .then(response => response.json())
+                    .then(data => {
+                        this.categoryList = data;
+                    })
+                    .catch(error => console.error('Error:', error));
+                },
+                resetForm() {
+                    this.newEvent = {
+                        nameEvent: '',
+                        moTa: '',
+                        image: '',
+                        soLuong: 1,
+                        dateBatDau: '',
+                        timeBatDau: '',
+                        dateKetThuc: '',
+                        timeKetThuc: '',
+                        diaDiem: '',
+                        name: '',
+                        company: '',
+                        email: '',
+                        phone: '',
+                        price: '',
+                        categoryId: null
+                    };
+                    this.imageFile = null;
+                    this.imageUrl = null;
+                }
+            },
+            created() {
+                this.fetchEvents();
+                this.fetchEventTypes();
+            }
+        });
+    </script>
+</section>
+</body>
+</html>

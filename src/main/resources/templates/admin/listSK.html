@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutad}">
+<head>
+    <title>List</title>
+    <link rel="icon" type="image/jpg" th:href="@{/img/favicon.jpg}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/css/core.css}" class="template-customizer-core-css" />
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/css/theme-default.css}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/demo.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<section id="app" layout:fragment="content" class="container mt-3">
+    <section class="section-container popular-container">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+                <div class="col" v-for="event in events" :key="event.id">
+                    <a :href="'/admin/details/' + event.id">
+                        <div class="card h-100">
+                            <img class="card-img-top" :src="/img/ + event.image" alt="Card image cap" />
+                            <div class="card-body">
+                                <h5 class="card-title">{{ event.nameEvent }}</h5>
+                                <p class="card-text">
+                                    {{ event.dateBatDau }} - {{ event.dateKetThuc }}
+                                </p>
+                                <p class="card-text">
+                                    {{ event.moTa }}
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                events: []
+            },
+
+            methods: {
+                fetchEvents() {
+                    axios.get('/api/events')
+                        .then(response => {
+                            this.events = response.data;
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                }
+            },
+            created() {
+                this.fetchEvents();
+            }
+        });
+    </script>
+</section>
+
+</body>
+</html>

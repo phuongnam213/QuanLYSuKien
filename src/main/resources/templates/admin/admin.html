@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layoutad}">
+<head>
+    <meta charset="utf-8" />
+    <title>Admin</title>
+    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="icon" type="image/jpg" th:href="@{/img/favicon.jpg}">
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/css/core.css}" class="template-customizer-core-css" />
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/css/theme-default.css}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/demo.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css}" />
+</head>
+
+<body>
+
+<div class="content-wrapper">
+    <!-- Content -->
+    <section layout:fragment="content" class="container-xxl flex-grow-1 container-p-y">
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+
+            <div class="col">
+                <a th:href="@{/admin/details}">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="../assets/img/elements/13.jpg" alt="Card image cap" />
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">
+                                This is a longer card with supporting text below as a natural lead-in to additional content.
+                                This content is a little bit longer.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a th:href="@{/admin/details}">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="../assets/img/elements/4.jpg" alt="Card image cap" />
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">
+                                This is a longer card with supporting text below as a natural lead-in to additional content.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a th:href="@{/admin/details}">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="../assets/img/elements/18.jpg" alt="Card image cap" />
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">
+                                This is a longer card with supporting text below as a natural lead-in to additional content.
+                                This content is a little bit longer.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a th:href="@{/details}">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="../assets/img/elements/19.jpg" alt="Card image cap" />
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">
+                                This is a longer card with supporting text below as a natural lead-in to additional content.
+                                This content is a little bit longer.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a th:href="@{/details}">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="../assets/img/elements/20.jpg" alt="Card image cap" />
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">
+                                This is a longer card with supporting text below as a natural lead-in to additional content.
+                                This content is a little bit longer.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- / Content -->
+    <div class="content-backdrop fade"></div>
+</div>
+
+</body>
+</html>
